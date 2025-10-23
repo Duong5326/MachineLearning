@@ -14,10 +14,13 @@ Dự án này xây dựng các mô hình học máy để phân tích, phân lo�
 https://bonbanh.com/ha-noi/oto-cu-da-qua-su-dung
 
 # Tác giả
- Họ và tên	            Mã sinh viên	 Tên GitHub	        Đóng góp
-[Nguyễn Thái Dương]	   [23001859]	   [Duong5326]	      [Đóng góp 1]
-[Lê Khả Dũng] 	         [23001847]	   [github_name]	   [Đóng góp 2]
-[Nguyễn Hữu Duy]	      [23001843]	   [23001853-wq]	   [Đóng góp 3]
+
+| Họ và tên          | Mã sinh viên | Tên GitHub     | Đóng góp   |
+|--------------------|--------------|----------------|-------------|
+| Nguyễn Thái Dương  | 23001859     | Duong5326      | Đóng góp 1 |
+| Lê Khả Dũng        | 23001847     | github_name    | Đóng góp 2 |
+| Nguyễn Hữu Duy     | 23001843     | 23001853-wq    | Đóng góp 3 |
+
 
 ## Cấu trúc Dự án
 
