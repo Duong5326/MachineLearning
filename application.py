@@ -1,6 +1,5 @@
 """
-Ứng dụng Flask để dự đoán giá xe dựa trên mô hình học máy đã huấn luyện 
-bằng wed ():):())
+Ứng dụng Flask để dự đoán giá xe dựa trên mô hình học máy đã huấn luyện
 """
 
 from flask import Flask, render_template, request, jsonify, redirect, url_for
@@ -19,9 +18,9 @@ import base64
 
 app = Flask(__name__)
 
-# Đường dẫn đến mô hình
+# Đường dẫn đến mô hình tốt nhất
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
-                         "src", "models", "Lasso_model.pkl")
+                         "data", "processed", "models", "RandomForest_model.pkl")
 
 # Đường dẫn đến dữ liệu
 DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
