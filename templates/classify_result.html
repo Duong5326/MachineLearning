@@ -14,7 +14,6 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <!-- Car Information -->
                     <div class="row mb-4">
                         <div class="col-lg-6">
                             <h3 class="mb-3">Thông tin xe</h3>
@@ -71,8 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Features Section -->
+
                     {% if features %}
                     <div class="features-section mb-4">
                         <h3 class="mb-3">Tính năng xe</h3>
@@ -106,8 +104,6 @@
                         </div>
                     </div>
                     {% endif %}
-                    
-                    <!-- Segment Information -->
                     <div class="segment-info mb-4">
                         <h3 class="mb-3">Thông tin phân khúc</h3>
                         <div class="alert alert-info">
@@ -133,8 +129,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    
-                    <!-- Similar Models -->
+
                     <div class="similar-models mb-4">
                         <h3 class="mb-3">Các mẫu xe tương tự</h3>
                         <div class="row">
@@ -148,7 +143,6 @@
                                 </div>
                                 {% endfor %}
                             {% else %}
-                                <!-- Fallback models if none provided -->
                                 {% set fallback_models = {
                                    
                                         {'brand': 'Mercedes-Benz', 'model': 'E-Class'},
@@ -187,8 +181,7 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Action buttons -->
+
             <div class="action-buttons mt-4 text-center">
                 <a href="/classify" class="btn btn-primary btn-lg me-2">
                     <i class="fas fa-tags me-2"></i>Phân loại xe khác
@@ -208,7 +201,7 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Add any interactive elements or animations here
+
     });
 </script>
 {% endblock %}

@@ -28,7 +28,6 @@
         </div>
     </section>
 
-    <!-- Price Distribution by Brand -->
     <section class="chart-section">
         <div class="card chart-card">
             <div class="card-header">
@@ -43,7 +42,6 @@
         </div>
     </section>
 
-    <!-- Price vs Age Correlation -->
     <section class="chart-section">
         <div class="card chart-card">
             <div class="card-header">
@@ -58,7 +56,6 @@
         </div>
     </section>
 
-    <!-- Market Distribution by Body Type -->
     <section class="chart-section">
         <div class="row">
             <div class="col-lg-6">
@@ -90,7 +87,6 @@
         </div>
     </section>
 
-    <!-- Price Trends Over Time -->
     <section class="chart-section">
         <div class="card chart-card">
             <div class="card-header">
@@ -105,7 +101,6 @@
         </div>
     </section>
 
-    <!-- Key Insights -->
     <section class="insights-section">
         <div class="card">
             <div class="card-header">
@@ -156,7 +151,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Hiển thị spinner cho tất cả biểu đồ (chỉ ẩn canvas, không xóa)
         const chartContainers = document.querySelectorAll('.chart-container');
         chartContainers.forEach(container => {
             const canvas = container.querySelector('canvas');
@@ -175,10 +169,8 @@
             }
         });
         
-        // Các biến để lưu trữ biểu đồ
         let brandPriceChart, ageVsPriceChart, bodyTypeChart, avgPriceByBodyChart, priceTrendsChart;
         
-        // Màu sắc cho các biểu đồ
         const chartColors = {
             backgrounds: [
                 'rgba(255, 99, 132, 0.7)',
@@ -206,18 +198,14 @@
             ]
         };
         
-        // Hàm xử lý lỗi cho việc lấy dữ liệu
         function handleFetchError(chartElement, error) {
             if (!chartElement) {
                 alert('Không tìm thấy phần tử biểu đồ để hiển thị lỗi!');
                 return;
             }
-            // Hiện lại canvas nếu bị ẩn
             chartElement.style.display = '';
-            // Xóa spinner nếu có
             const spinner = chartElement.parentElement.querySelector('.spinner-wrapper');
             if (spinner) spinner.remove();
-            // Hiển thị lỗi phía dưới canvas
             let errorDiv = chartElement.parentElement.querySelector('.alert');
             if (!errorDiv) {
                 errorDiv = document.createElement('div');
@@ -233,7 +221,6 @@
             }
         }
         
-        // 1. Tải dữ liệu phân bố thương hiệu
         fetch('/api/data/brand_distribution')
             .then(response => {
                 if (!response.ok) {
@@ -292,7 +279,6 @@
                         }
                     }
                 });
-                // Hiện canvas, xoá spinner
                 chartEl.style.display = '';
                 const spinner = chartEl.parentElement.querySelector('.spinner-wrapper');
                 if (spinner) spinner.remove();
@@ -301,7 +287,6 @@
                 handleFetchError(document.getElementById('brandPriceChart'), error);
             });
         
-        // 2. Tải dữ liệu tương quan giữa năm sản xuất và giá bán
         fetch('/api/data/year_price_relation')
             .then(response => {
                 if (!response.ok) {
@@ -371,7 +356,6 @@
                 handleFetchError(document.getElementById('ageVsPriceChart'), error);
             });
         
-        // 3. Tải dữ liệu phân bố kiểu dáng xe
         fetch('/api/data/body_type_distribution')
             .then(response => {
                 if (!response.ok) {
@@ -422,7 +406,6 @@
                 handleFetchError(document.getElementById('bodyTypeChart'), error);
             });
         
-        // 4. Tải dữ liệu giá trung bình theo kiểu dáng
         fetch('/api/data/avg_price_by_body_type')
             .then(response => {
                 if (!response.ok) {
@@ -492,7 +475,6 @@
                 handleFetchError(document.getElementById('avgPriceByBodyChart'), error);
             });
         
-        // 5. Tải dữ liệu xu hướng giá xe theo thời gian
         fetch('/api/data/price_trends')
             .then(response => {
                 if (!response.ok) {
@@ -564,14 +546,11 @@
                 handleFetchError(document.getElementById('priceTrendsChart'), error);
             });
         
-        // Chart Filter Event
         document.getElementById('chart-filter').addEventListener('change', function(e) {
             const filterValue = e.target.value;
             
-            // Hiển thị thông báo tính năng đang phát triển
             alert(`Tính năng lọc "${filterValue}" đang được phát triển và sẽ sớm được cập nhật trong phiên bản tiếp theo.`);
             
-            // Trong thực tế, đây sẽ là nơi để thực hiện lọc dữ liệu và cập nhật biểu đồ
         });
     });
 </script>

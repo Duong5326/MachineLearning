@@ -3,7 +3,6 @@
 {% block title %}Dự đoán giá xe ô tô cũ tại Hà Nội{% endblock %}
 
 {% block content %}
-    <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="row align-items-center">
@@ -25,7 +24,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section class="features">
         <div class="row text-center">
             <div class="col-md-4 mb-4">
@@ -58,7 +56,6 @@
         </div>
     </section>
 
-    <!-- Prediction Form Section -->
     <section id="predict-form" class="prediction-form">
         <div class="row justify-content-center">
             <div class="col-lg-10">
@@ -70,7 +67,6 @@
                     <div class="card-body">
                         <form action="/predict" method="post">
                             <div class="row g-3">
-                                <!-- Thương hiệu & Năm sản xuất -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="brand" class="form-label">
@@ -97,8 +93,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
-                                <!-- Kiểu dáng & Dung tích động cơ -->
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="body_type" class="form-label">
@@ -121,8 +116,7 @@
                                                step="0.1" min="0.5" max="8.0" placeholder="Ví dụ: 2.0" required>
                                     </div>
                                 </div>
-                                
-                                <!-- Loại nhiên liệu & Xuất xứ -->
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="fuel_type" class="form-label">
@@ -148,8 +142,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                
-                                <!-- Số km đã đi -->
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="mileage" class="form-label">
@@ -160,7 +153,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Transmission (Hộp số) -->
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="transmission" class="form-label">
@@ -174,15 +166,13 @@
                                             <option value="DCT">Ly hợp kép (DCT)</option>
                                         </select>
                                         <script>
-                                            // Đảm bảo thuộc tính required cho select transmission
                                             document.addEventListener('DOMContentLoaded', function() {
                                                 document.getElementById('transmission').setAttribute('required', 'required');
                                             });
                                         </script>
                                     </div>
                                 </div>
-                                
-                                <!-- Submit Button -->
+                            
                                 <div class="col-12 mt-4 text-center">
                                     <button type="submit" class="btn btn-primary btn-lg px-5 py-3">
                                         <i class="fas fa-calculator me-2"></i>Dự đoán giá
@@ -196,7 +186,6 @@
         </div>
     </section>
 
-    <!-- How It Works Section -->
     <section class="how-it-works mt-5 pt-5">
         <h2 class="section-title text-center">Cách thức hoạt động</h2>
         <p class="section-subtitle text-center mb-5">Quy trình dự đoán giá xe từ dữ liệu thực tế</p>
