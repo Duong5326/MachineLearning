@@ -29,11 +29,8 @@ MachineLearning/
 ├── data/
 │   ├── raw/                     # Dữ liệu gốc
 │   │   ├── used_cars.csv        # Bộ dữ liệu gốc xe đã qua sử dụng
-│   │   ├── bonbanh_scraper_raw.py # Script crawl dữ liệu từ Bonbanh.com
-│   │   ├── car_data.csv         # Dữ liệu thô
-│   │   ├── car_data.json        # Dữ liệu JSON thô
-│   │   ├── fix_car_data.py      # Script sửa lỗi dữ liệu thô
-│   │   └── data/                # Thư mục chứa dữ liệu HTML mẫu
+│   │   ├── bot.py
+│   │   ├── bot2.py         
 │   ├── processed/               # Dữ liệu sau khi làm sạch
 │   │   ├── car_data_en.csv      # Dữ liệu đã chuyển sang tiếng Anh
 │   │   ├── car_data_en.json     # Dữ liệu JSON đã chuyển sang tiếng Anh
@@ -45,10 +42,10 @@ MachineLearning/
 │   │   ├── clean_raw_to_processed.py # Script làm sạch dữ liệu
 │   │   ├── enhance_car_data.py  # Script tăng cường đặc trưng
 │   │   ├── split_train_test.py  # Script chia tập train/test
-│   │   ├── train_price_model.py # Script huấn luyện mô hình dự đoán giá
 │   │   ├── run_train_model.bat  # Batch file chạy quá trình huấn luyện
 │   │   ├── install_packages.py  # Script cài đặt thư viện cần thiết
-│   │   └── models/              # Thư mục lưu mô hình đã huấn luyện
+│   │   ├── models/              # Thư mục lưu mô hình đã huấn luyện 
+│   │   └── processed_analysis/  # Thư mục lưu dữ liệu phân tích, scaler, PCA, các file .pkl trung gian
 │   └── README.md                # Mô tả nguồn dữ liệu và cấu trúc
 ├── notebooks/
 │   ├── 01_data_exploration.ipynb    # Phân tích khám phá dữ liệu
@@ -60,16 +57,18 @@ MachineLearning/
 │   ├── 07_classification_models.ipynb # Mô hình phân loại phân khúc giá
 │   └── car_price_model_analysis_simple.ipynb         # Phân tích kết quả (tóm tắt)
 ├── src/
-│   ├── __init__.py              # File khởi tạo package
 │   ├── data_loader.py           # Đọc và xử lý dữ liệu
 │   ├── preprocessing.py         # Tiền xử lý dữ liệu
 │   ├── feature_engineering.py   # Tạo đặc trưng mới
+│   ├── dimensionality_reduction.py         # Giam chiều trực quan hóa dữ liệu
 │   ├── visualization.py         # Các hàm vẽ biểu đồ
 │   ├── regression.py            # Các mô hình hồi quy
 │   ├── classification.py        # Các mô hình phân loại
 │   ├── clustering.py            # Các mô hình phân cụm
 │   ├── evaluate.py              # Đánh giá mô hình
 │   ├── predict.py               # Dự đoán giá xe mới
+│   ├── train_price_model.py     # Script huấn luyện mô hình dự đoán giá
+
 ├── static/
 │   └── css/                     # CSS cho giao diện web
 │       └── style.css
@@ -84,7 +83,6 @@ MachineLearning/
 ├── run_car_data_pipeline.ps1    # PowerShell script chạy pipeline xử lý dữ liệu
 ├── requirements.txt             # Danh sách các thư viện cần thiết
 ├── README.md                    # Mô tả dự án, hướng dẫn cài đặt và sử dụng
-└── .gitignore                   # Loại trừ các file không cần theo dõi
 ```
 
 ## Tổng quan dự án
@@ -116,7 +114,7 @@ Bộ dữ liệu chứa thông tin về xe ô tô đã qua sử dụng với cá
 1. Clone repository:
    ```
    git clone <url-repo>
-   cd MachineLearning
+   cd MachineLearnings
    ```
 
 2. Cài đặt các thư viện cần thiết:
@@ -124,10 +122,11 @@ Bộ dữ liệu chứa thông tin về xe ô tô đã qua sử dụng với cá
    pip install -r requirements.txt
    ```
 
-3. Chạy quy trình xử lý dữ liệu:
+3. Chạy quy trình xử lý dữ liệu và huấn luyện mô hình:
    ```
    powershell -ExecutionPolicy Bypass -File run_car_data_pipeline.ps1
    ```
+   (Các model sẽ được lưu vào data/processed/models/)
 
 4. Chạy ứng dụng web:
    ```
@@ -158,6 +157,10 @@ Script này sẽ thực hiện các bước:
 python predict_car_price.py --brand "Toyota" --year 2018 --mileage 50000 --body_type "Sedan"
 ```
 
+**Lưu ý:**
+- Đường dẫn model trong các script đã được chuẩn hóa về `data/processed/models/` (ví dụ: `Lasso_model.pkl`, `RandomForest_model.pkl`...)
+- Nếu gặp lỗi không tìm thấy file model, hãy kiểm tra lại vị trí file `.pkl` trong thư mục này.
+
 ### Xử lý dữ liệu
 
 Để chỉ xử lý dữ liệu mà không huấn luyện mô hình:
@@ -174,10 +177,10 @@ Các notebooks được tổ chức theo thứ tự phân tích:
 2. `02_data_preprocessing.ipynb`: Làm sạch và tiền xử lý dữ liệu
 3. `03_regression_models.ipynb`: Phát triển mô hình hồi quy dự đoán giá xe
 4. `04_clustering_analysis.ipynb`: Phân tích phân cụm các loại xe
-5. ` 05_data_dimensionality_reduction.ipynb`: Phân tích phân cụm 
+5. `05_data_dimensionality_reduction.ipynb`: Giảm chiều dữ liệu, lưu các preprocessing model (PCA, scaler, ...) vào `data/processed/processed_analysis/`
 6. `06_model_analysis.ipynb`: Phân tích chi tiết hiệu suất mô hình
 7. `07_classification_models.ipynb`: Phát triển mô hình phân loại phân khúc giá
-8. `car_price_model_analysis_simple.ipynb  `: Phân tích kết quả(tóm tắt)
+8. `car_price_model_analysis_simple.ipynb`: Phân tích kết quả (tóm tắt)
 
 ### Ứng dụng Web
 
@@ -203,6 +206,9 @@ Có nhiều cách để huấn luyện mô hình:
    ```
    Script này tập trung vào việc huấn luyện các mô hình và lưu vào thư mục `data/processed/models`.
 
+   **Lưu ý:**
+   - Các preprocessing model (PCA, scaler, ...) và dữ liệu trung gian sẽ được lưu vào `data/processed/processed_analysis/`.
+
 3. **Sử dụng Jupyter Notebook**:
    Các notebook trong thư mục `notebooks/` cung cấp phương pháp tiếp cận tương tác với các phân tích trực quan.
 
@@ -210,10 +216,9 @@ Có nhiều cách để huấn luyện mô hình:
 
 ### Mô hình Hồi quy (Dự đoán giá chính xác)
 1. Linear Regression (Hồi quy tuyến tính)
-2. K-Nearest Neighbors (KNN)
-3. Multi-layer Perceptron (MLP)
-4. Random Forest Regressor
-5. Support Vector Regression (SVR)
+2. Ridge, Lasso Regression
+3. Random Forest Regressor
+4. Gradient Boosting
 
 ### Mô hình Phân loại (Phân khúc giá)
 1. Naive Bayes (GaussianNB)
@@ -233,6 +238,7 @@ Các đặc trưng được tạo ra từ dữ liệu gốc:
 - `mileage_km`: Số km đã đi (chuẩn hóa)
 - `mileage_per_year`: Số km đi trung bình mỗi năm
 - `brand_category`: Phân loại thương hiệu (Luxury, Premium, Economy)
+- `processed_analysis/`: Lưu các preprocessing model (PCA, scaler, encoder, ...) và dữ liệu phân tích trung gian
 
 ## Đánh giá hiệu suất
 

@@ -9,9 +9,21 @@ import sys
 import numpy as np
 from datetime import datetime
 
-# Đường dẫn đến thư mục chứa mô hình
-MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
-                          "MachineLearning", "src", "models", "Lasso_model.pkl")
+# Đường dẫn tới mô hình tốtt nhất
+base_dir = os.path.dirname(os.path.abspath(__file__))
+candidate_model_paths = [
+    os.path.join(base_dir, "data", "processed", "models", "RandomForest_model.pkl"),
+]
+
+MODEL_PATH = None
+for p in candidate_model_paths:
+    if os.path.exists(p):
+        MODEL_PATH = p
+        break
+
+if MODEL_PATH is None:
+    # default to first candidate so error message is clearer in load_model
+    MODEL_PATH = candidate_model_paths[0]
 
 def load_model():
     """Nạp mô hình đã huấn luyện"""
@@ -49,38 +61,21 @@ def predict_car_price(brand, year, body_type, engine_capacity, fuel_type, is_imp
     current_year = datetime.now().year
     car_age = current_year - year
     
-    # Chuyển mileage_km thành dạng phân loại giống khi huấn luyện (binning)
-    def mileage_bin(km):
-        try:
-            if km is None or (isinstance(km, float) and np.isnan(km)):
-                return 'unknown'
-            km = float(km)
-        except Exception:
-            return 'unknown'
-        if km <= 10000:
-            return '0-10k'
-        elif km <= 50000:
-            return '10-50k'
-        elif km <= 100000:
-            return '50-100k'
-        elif km <= 200000:
-            return '100-200k'
-        else:
-            return '>200k'
-
-    mileage_cat = mileage_bin(mileage_km)
-
-    # Tạo DataFrame chứa dữ liệu đầu vào (bảo đảm các cột categorical là kiểu string)
+    # Tạo DataFrame chứa dữ liệu đầu vào
     input_data = pd.DataFrame({
         'year': [year],
         'engine_capacity': [engine_capacity],
         'car_age': [car_age],
         'is_imported': [is_imported],
-        'mileage_km': [mileage_cat],
-        'brand': [str(brand)],
-        'body_type': [str(body_type)],
-        'fuel_type': [str(fuel_type)]
+        'mileage_km': [mileage_km],
+        'brand': [brand],
+        'body_type': [body_type],
+        'fuel_type': [fuel_type]
     })
+    # Ensure categorical columns are strings to match training preprocessing
+    for col in ['brand', 'body_type', 'fuel_type', 'mileage_km']:
+        if col in input_data.columns:
+            input_data[col] = input_data[col].astype(str)
     
     # Dự đoán giá xe
     try:

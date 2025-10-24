@@ -22,7 +22,8 @@ BASE_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, os.pardir))
 PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
 TRAIN_FILE = os.path.join(PROCESSED_DIR, "train_data.csv")
 TEST_FILE = os.path.join(PROCESSED_DIR, "test_data.csv")
-MODEL_DIR = os.path.join(SCRIPT_DIR, "models")
+# Lưu model vào data/processed/models
+MODEL_DIR = os.path.join(PROCESSED_DIR, "models")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 def convert_price_to_number(price_text):

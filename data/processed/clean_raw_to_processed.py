@@ -17,8 +17,24 @@ current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
 project_root = current_dir.parent.parent  # MachineLearning folder
 processed_dir = project_root / "data" / "processed"
 
-# Đường dẫn file - sử dụng đường dẫn tuyệt đối đến file used_cars.csv trong thư mục data/raw/data/raw
-used_cars_path = Path(r"d:\New folder\MachineLearning\data\raw\data\raw\used_cars.csv")
+# Đường dẫn file - chọn tự động từ các vị trí khả dĩ (ưu tiên project-relative)
+candidate_paths = [
+    project_root / "data" / "raw" / "used_cars.csv",
+    project_root / "data" / "raw" / "data" / "raw" / "used_cars.csv",
+    Path(r"d:\New folder\MachineLearning\data\raw\data\raw\used_cars.csv"),
+]
+
+used_cars_path = None
+for p in candidate_paths:
+    if p.exists():
+        used_cars_path = p
+        break
+
+if used_cars_path is None:
+    tried = '\n'.join(str(p) for p in candidate_paths)
+    raise FileNotFoundError(
+        f"Could not find used_cars.csv. Tried the following paths:\n{tried}\n\nPlease place your CSV in one of these locations or update the script." 
+    )
 processed_json_path = processed_dir / "car_data.json"
 processed_csv_path = processed_dir / "processed_car_data.csv"
 
