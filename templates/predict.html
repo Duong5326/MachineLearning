@@ -7,7 +7,6 @@
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 {% if predicted_price %}
-                <!-- Hiển thị kết quả dự đoán -->
                 <div class="card result-card mb-4">
                     <div class="card-header">
                         <h2 class="card-title mb-0">Giá xe dự đoán</h2>
@@ -32,7 +31,6 @@
                             {% endif %}
                         </div>
 
-                        <!-- Visualization of price comparison (placeholder) -->
                         <div class="price-comparison mt-4">
                             <h4>So sánh với giá thị trường</h4>
                             <div class="price-range-bar">
@@ -50,7 +48,6 @@
                     </div>
                 </div>
 
-                <!-- Thông tin xe đã nhập -->
                 <div class="card info-card">
                     <div class="card-header">
                         <h3 class="card-title">Thông tin chi tiết xe</h3>
@@ -95,7 +92,6 @@
                     </div>
                 </div>
                 {% else %}
-                <!-- Form nhập thông tin xe -->
                 <div class="card shadow-lg">
                     <div class="card-body">
                         <div class="text-center">
@@ -127,7 +123,6 @@
 
 {% block scripts %}
 <script>
-    // Animated number counter for price display
     document.addEventListener('DOMContentLoaded', function() {
         const priceElement = document.querySelector('.price-display .display-5');
         if (priceElement) {
