@@ -19,7 +19,7 @@ https://bonbanh.com/ha-noi/oto-cu-da-qua-su-dung
 |--------------------|--------------|----------------|-------------|
 | Nguyễn Thái Dương  | 23001859     | Duong5326      | Đóng góp 1 |
 | Lê Khả Dũng        | 23001847     | github_name    | Đóng góp 2 |
-| Nguyễn Hữu Duy     | 23001843     | 23001853-wq    | Đóng góp 3 |
+| Nguyễn Hữu Duy     | 23001853     | 23001853-wq    | Đóng góp 3 |
 
 
 ## Cấu trúc Dự án
