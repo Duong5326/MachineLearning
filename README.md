@@ -16,7 +16,7 @@ https://bonbanh.com/ha-noi/oto-cu-da-qua-su-dung
 # Tác giả
 
 | Họ và tên          | Mã sinh viên | Tên GitHub     | Đóng góp   |
-|--------------------|--------------|----------------|-------------|
+|--------------------|--------------|----------------|------------|
 | Nguyễn Thái Dương  | 23001859     | Duong5326      | Đóng góp 1 |
 | Lê Khả Dũng        | 23001847     | github_name    | Đóng góp 2 |
 | Nguyễn Hữu Duy     | 23001853     | 23001853-wq    | Đóng góp 3 |
@@ -100,14 +100,21 @@ Dự án này tập trung vào việc phân tích, dự đoán và phân loại 
 ## Dữ liệu
 
 Bộ dữ liệu chứa thông tin về xe ô tô đã qua sử dụng với các thông tin:
+- Đường dẫn dữ liệu (url)
 - Hãng xe (brand)
-- Số km đã đi (mileage)
 - Năm sản xuất (year)
-- Hộp số (transmission)
+- Số km đã đi (mileage)
+- Xuất xứ (origin)
 - Kiểu dáng (body_type)
-- Số chỗ ngồi (seats)
+- Hộp số (transmission)
 - Động cơ (engine)
+- Màu ngoại thất (exterior color)
+- Màu nội thất (interior color)
+- Số chỗ ngồi (seats)
+- Số cửa (doors)
+- dẫn động (drive)
 - Giá bán (price)
+- Tình trạng xe (condition)
 
 ## Cài đặt
 
