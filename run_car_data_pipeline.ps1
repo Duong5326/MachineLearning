@@ -1,5 +1,4 @@
 # Script chạy toàn bộ quy trình thu thập, xử lý và phân tích dữ liệu xe
-# Tác giả: GitHub Copilot
 # Cập nhật: Quy trình hoàn chỉnh từ thu thập dữ liệu đến chuẩn bị cho mô hình máy học
 
 # Kích hoạt môi trường ảo
