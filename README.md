@@ -54,10 +54,7 @@ MachineLearning/
 ├── requirements.txt                   # Danh sách thư viện phụ thuộc
 ├── README.md                          # Tài liệu chính
 └── Other docs/                        # Báo cáo và hướng dẫn
-    ├── README_BAI_TAP_LON.md
-    ├── PROJECT_SUMMARY.md
-    ├── STRUCTURE_REPORT.md
-    └── ...
+   
 ```
 
 ## Mô hình Machine Learning
