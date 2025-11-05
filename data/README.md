@@ -1,4 +1,4 @@
-# Tài liệu dữ liệu - Dự án dự đoán giá xe ô tô
+# Tài liệu dữ liệu 
 
 ## Cấu trúc dữ liệu
 
