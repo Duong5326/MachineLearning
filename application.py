@@ -19,7 +19,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(BASE_DIR, "data", "processed", "models")
 DATA_CSV_PATH = os.path.join(BASE_DIR, "data", "processed", "enhanced_car_data.csv")
-REGRESSION_MODEL_PATH = os.path.join(MODELS_DIR, "RandomForest_model.pkl")
+REGRESSION_MODEL_PATH = os.path.join(MODELS_DIR, "KNN_model.pkl")
 CLASSIFICATION_MODEL_PATH = os.path.join(MODELS_DIR, "Random_Forest_classifier.pkl")
 
 # Cấu hình mô hình ML

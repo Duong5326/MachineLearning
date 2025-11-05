@@ -39,7 +39,7 @@ MachineLearning/
 │           ├── Random_Forest_classifier.pkl  # Classification model
 │           └── best_model_name.txt          # Model metadata
 ├── notebooks/
-│   └── 08_comprehensive_training.ipynb # Training pipeline hoàn chỉnh
+│   └── training.ipynb # Training pipeline hoàn chỉnh
 ├── templates/                          # HTML Templates
 │   ├── index.html                     # Trang chủ - form dự đoán giá
 │   ├── predict.html                   # Kết quả dự đoán
