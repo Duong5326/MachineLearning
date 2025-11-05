@@ -65,7 +65,7 @@ python processed/clean_raw_to_processed.py
 python processed/enhance_car_data.py
 
 # Mở notebook training
-jupyter notebook notebooks/08_comprehensive_training.ipynb
+jupyter notebook notebooks/training.ipynb
 
 ```
 
