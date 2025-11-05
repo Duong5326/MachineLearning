@@ -126,7 +126,7 @@ python application.py
 ## Training Models (Tùy chọn)
 Models đã được train sẵn. Nếu cần train lại:
 ```bash
-jupyter notebook notebooks/08_comprehensive_training.ipynb
+jupyter notebooks/training.ipynb
 ```
 Pipeline sẽ thực hiện:
 1. Load & preprocess data
