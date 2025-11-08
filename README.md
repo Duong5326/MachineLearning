@@ -74,6 +74,7 @@ MachineLearning/
 │   └── error.html                     # Error handling
 ├── static/css/
 │   └── style.css                      # Bootstrap custom styles
+│   └── png                            # Ảnh qua huấn luyện
 ├── application.py                     # Ứng dụng Flask
 ├── requirements.txt                   # Danh sách thư viện phụ thuộc
 └── README.md                          # Tài liệu chính
