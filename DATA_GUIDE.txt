@@ -1,0 +1,39 @@
+DATA_GUIDE.txt
+====================
+
+# 3.4. Link lấy dữ liệu và hướng dẫn các tổ chức thư mục để thực nghiệm
+
+## Link nguồn dữ liệu
+- Nguồn chính: https://bonbanh.com/ha-noi/oto-cu-da-qua-su-dung
+- Dataset gốc: data/raw/used_cars.csv (~13,500 xe ô tô cũ tại Hà Nội)
+- Dataset đã xử lý: data/processed/enhanced_car_data.csv (8 features tối ưu)
+
+## Hướng dẫn tổ chức thư mục
+MachineLearning/
+├── data/
+│   ├── raw/
+│   └── processed/
+│       └── models/
+├── notebooks/
+├── templates/
+├── static/
+├── application.py
+├── requirements.txt
+└── README.md
+
+## Kịch bản thực nghiệm chi tiết
+1. Chuẩn bị môi trường và dữ liệu
+   - Clone repository, cài đặt dependencies
+   - Chạy script crawl dữ liệu (nếu cần)
+   - Làm sạch và xử lý dữ liệu
+2. Training và đánh giá mô hình
+   - Chạy notebook training
+   - So sánh các thuật toán, chọn model tốt nhất
+3. Kiểm tra các mô hình đã trained
+   - Test regression/classification models
+4. Demo web application
+   - Chạy Flask app, truy cập và test các chức năng
+
+## Lưu ý
+- Đảm bảo các file dữ liệu và models đúng vị trí như hướng dẫn.
+- Nếu cần cập nhật dữ liệu mới, chạy lại các script crawl và xử lý trước khi training.
