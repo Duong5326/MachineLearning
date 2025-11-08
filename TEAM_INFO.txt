@@ -6,7 +6,7 @@ TEAM_INFO.txt
 ## Thành viên nhóm
 | Thành viên             | MSSV     | Vai trò chính                                   |
 |-----------------------|----------|-------------------------------------------------|
-| Nguyễn Thái Dương     | 23001859 | Leader, Data Engineer                           |
+| Nguyễn Thái Dương     | 23001859 | Data Engineer, ML Engineer (Regression)                        |
 | Lê Khả Dũng           | 23001847 | ML Engineer (Clustering & Dimensionality Reduction) |
 | Nguyễn Hữu Duy        | 23001843 | ML Engineer (Classification), Frontend Developer |
 
