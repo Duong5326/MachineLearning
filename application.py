@@ -507,6 +507,26 @@ def get_chart_data():
         'avg_price_by_body': df.groupby('body_type')['price_million'].mean().round(0).sort_values(ascending=False)
     }
 
+@app.route('/api/data/price_trends')
+def api_price_trends():
+    try:
+        df = load_data()
+        if df.empty or 'year' not in df or 'price_million' not in df:
+            return jsonify({"error": "No data"}), 400
+        trends = df.groupby('year')['price_million'].mean().round(0)
+        filtered_trends = trends[trends.index >= 1991]
+        return jsonify({
+            "labels": filtered_trends.index.tolist(),
+            "datasets": [
+                {
+                    "label": "Giá trung bình theo năm",
+                    "data": filtered_trends.values.tolist()
+                }
+            ]
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/data/<data_type>')
 def api_unified_data(data_type):
     """API thống nhất cho tất cả dữ liệu biểu đồ"""
@@ -542,26 +562,25 @@ def api_unified_data(data_type):
 def visualization_results():
     """Trang hiển thị kết quả phân tích ML"""
     images = [
-        {"file": "comprehensive_model_comparison.png", "title": "Model Performance Comparison"},
-        {"file": "pca_comparison_analysis.png", "title": "Original vs PCA Comparison"},
-        {"file": "residual_analysis.png", "title": "Residual Analysis"},
-        {"file": "residual_feature_correlations.png", "title": "Feature Correlation Analysis"},
-        {"file": "classification_comparison.png", "title": "Classification Comparison"},
-        {"file": "clustering_analysis.png", "title": "Clustering Analysis (KMeans & DBSCAN)"},
-        {"file": "pairwise_dimensionality_analysis.png", "title": "Dimensionality Reduction Visualization"},
-        {"file": "comprehensive_dimensionality_comparison.png", "title": "Dimensionality Methods Comparison"},
+        {"file": "comprehensive_model_comparison.png", "title": "So sánh hiệu suất các mô hình"},
+        {"file": "pca_comparison_analysis.png", "title": "So sánh dữ liệu gốc và PCA"},
+        {"file": "residual_analysis.png", "title": "Phân tích phần dư"},
+        {"file": "residual_feature_correlations.png", "title": "Phân tích tương quan đặc trưng với phần dư"},
+        {"file": "classification_comparison.png", "title": "So sánh các mô hình phân loại"},
+        {"file": "clustering_analysis.png", "title": "Phân tích phân cụm (KMeans & DBSCAN)"},
+        {"file": "pairwise_dimensionality_analysis.png", "title": "Trực quan hóa giảm chiều dữ liệu"},
+        {"file": "comprehensive_dimensionality_comparison.png", "title": "So sánh các phương pháp giảm chiều"},
     ]
-    
     static_dir = os.path.join(BASE_DIR, "static")
     available_images = []
     missing_files = False
-    
+
     for img in images:
         if os.path.exists(os.path.join(static_dir, img['file'])):
             available_images.append(img)
         else:
             missing_files = True
-    
+
     return render_template('visualization_results.html',
                            images=available_images,
                            missing_files=missing_files)
