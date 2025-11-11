@@ -42,19 +42,6 @@
         </div>
     </section>
 
-    <section class="chart-section">
-        <div class="card chart-card">
-            <div class="card-header">
-                <h2 class="card-title">Tương quan giữa giá xe theo từng năm</h2>
-                <p class="card-subtitle">Biểu đồ thể hiện mối quan hệ giá xe</p>
-            </div>
-            <div class="card-body">
-                <div class="chart-container">
-                    <canvas id="ageVsPriceChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <section class="chart-section">
         <div class="row">
@@ -287,74 +274,6 @@
                 handleFetchError(document.getElementById('brandPriceChart'), error);
             });
         
-        fetch('/api/data/year_price_relation')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Không thể tải dữ liệu tương quan năm sản xuất và giá bán');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                const chartEl = document.getElementById('ageVsPriceChart');
-                const ageVsPriceCtx = chartEl.getContext('2d');
-                ageVsPriceChart = new Chart(ageVsPriceCtx, {
-                    type: 'line',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'Giá trung bình theo năm sản xuất',
-                            data: data.data,
-                            backgroundColor: 'rgba(54, 162, 235, 0.3)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 2,
-                            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                            pointRadius: 4,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return 'Giá trung bình: ' + context.raw + ' triệu VND';
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Năm sản xuất'
-                                }
-                            },
-                            y: {
-                                beginAtZero: false,
-                                title: {
-                                    display: true,
-                                    text: 'Giá xe (triệu VND)'
-                                }
-                            }
-                        }
-                    }
-                });
-                chartEl.style.display = '';
-                const spinner = chartEl.parentElement.querySelector('.spinner-wrapper');
-                if (spinner) spinner.remove();
-            })
-            .catch(error => {
-                handleFetchError(document.getElementById('ageVsPriceChart'), error);
-            });
         
         fetch('/api/data/body_type_distribution')
             .then(response => {
