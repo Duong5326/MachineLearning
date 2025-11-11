@@ -19,7 +19,7 @@ TEAM_INFO.txt
 | Lê Khả Dũng           | - Thực hiện các phương pháp giảm chiều và phân cụm (PCA, KMeans...), phân tích và đánh giá kết quả |
 |                       | - Phối hợp tiền xử lý dữ liệu, đánh giá ảnh hưởng của giảm chiều lên mô hình, viết báo cáo phần clustering, giảm chiều |
 |                       | - Tham gia hỗ trợ so sánh kết quả giữa các phương pháp trước/sau khi giảm chiều |
-| Nguyễn Hữu Duy        | - Xây dựng mô hình RandomForest Classification (phân loại 4 phân khúc giá) |
+| Nguyễn Hữu Duy        | - Xây dựng mô hình RandomForest Classification,KNeighborsClassifier (phân loại 4 phân khúc giá) |
 |                       | - Phát triển Flask web application với Bootstrap UI |
 |                       | - Thiết kế giao diện người dùng, integration testing và deployment |
 |                       | - Viết báo cáo phần classification và demo ứng dụng |
@@ -27,4 +27,4 @@ TEAM_INFO.txt
 ## Kỹ thuật ML được sử dụng bởi từng thành viên
 - Thành viên 1: Regression (RandomForest, Linear, Lasso, KNN), Data Preprocessing, Feature Engineering  
 - Thành viên 2: Dimensionality Reduction (PCA), Clustering (KMeans), Data Evaluation  
-- Thành viên 3: Classification (RandomForest), Model Evaluation, Web Development (Flask)
+- Thành viên 3: Classification (RandomForest,KNN), Model Evaluation, Web Development (Flask)

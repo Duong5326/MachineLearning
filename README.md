@@ -37,7 +37,7 @@ Dự án này xây dựng các mô hình học máy để phân tích, phân lo�
 ## Kỹ thuật ML được sử dụng bởi từng thành viên
 - Thành viên 1: Regression (RandomForest, Linear, Lasso, KNN), Data Preprocessing, Feature Engineering  
 - Thành viên 2: Dimensionality Reduction (PCA), Clustering (KMeans), Data Evaluation  
-- Thành viên 3: Classification (RandomForest), Model Evaluation, Web Development (Flask)
+- Thành viên 3: Classification (RandomForest,KNN), Model Evaluation, Web Development (Flask)
 
 ## 3.4. Hướng dẫn tổ chức dữ liệu và kịch bản thực nghiệm
 
@@ -59,7 +59,10 @@ MachineLearning/
 │       ├── clean_raw_to_processed.py  # Script làm sạch
 │       ├── enhance_car_data.py        # Feature engineering
 │       └── models/                    # Trained Models
-│           ├── RandomForest_model.pkl        # Regression model
+│           ├── KNN_model.pkl                   # Regression model
+│           ├── RandomForest_model.pkl          # Regression model
+│           ├── Lasso_model.pkl                 # Regression model
+│           ├── LinearRegression_model.pkl      # Regression model
 │           ├── Random_Forest_classifier.pkl  # Classification model
 │           └── best_model_name.txt          # Model metadata
 ├── notebooks/
@@ -69,7 +72,8 @@ MachineLearning/
 │   ├── predict.html                   # Kết quả dự đoán
 │   ├── classify.html                  # Form phân loại phân khúc
 │   ├── classify_result.html           # Kết quả phân loại
-│   ├── visualization.html             # Dashboard trực quan
+│   ├── visualization.html             # Dashboard trực quan dùng chart.js 
+│   ├── visualization_result.html      # Dashboard trực quan từ huấn luyện
 │   ├── layout.html                    # Base template
 │   └── error.html                     # Error handling
 ├── static/css/
@@ -148,7 +152,8 @@ python application.py
 # Truy cập và test:
 # - http://localhost:5000/          → Dự đoán giá xe
 # - http://localhost:5000/classify  → Phân loại phân khúc  
-# - http://localhost:5000/visualization → Dashboard analytics
+# - http://localhost:5000/visualization → Dashboard trực quan dùng chart.js 
+# - http://localhost:5000/visualization_result → # Dashboard trực quan từ huấn luyện
 ```
 
 ### Hướng dẫn sử dụng file kết quả
@@ -183,15 +188,15 @@ python application.py
 
 | Thuật toán | Loại | Performance | Trạng thái | Ghi chú |
 |------------|------|-------------|------------|---------|
-| **RandomForestRegressor** | Hồi quy | R² cao nhất | ✅ **Được chọn** | Lưu 4 models với tỷ lệ khác nhau |
+| **KNeighborsRegressor** | Hồi quy | R² cao nhất | ✅ **Được chọn** | Tốt nhất với dữ liệu đã chuẩn hóa, 8 đặc trưng |
+| RandomForestRegressor | Hồi quy | R² cao nhưng thấp hơn KNN | ❌ Không dùng | Phù hợp với dữ liệu nhiều đặc trưng, nhưng KNN tốt hơn với 8 đặc trưng |
 | LinearRegression | Hồi quy | R² thấp | ❌ Không dùng | Underfitting với dữ liệu phức tạp |
 | Lasso Regression | Hồi quy | R² trung bình | ❌ Không dùng | Over-regularization |
-| KNeighborsRegressor | Hồi quy | R² thấp | ❌ Không dùng | Sensitive to outliers |
 | **RandomForestClassifier** | Phân loại | 91.6% accuracy | ✅ **Được chọn** | Tốt nhất cho 4-class classification |
 | KNeighborsClassifier | Phân loại | Accuracy thấp hơn | ❌ Không dùng | Kém hiệu quả với high-dim data |
 
 ### Kiến trúc hệ thống cuối cùng
-- **RandomForest Regression** - Dự đoán giá xe (4 models với train/test ratios khác nhau)
+- **KNN Regression** - Dự đoán giá xe (mô hình tốt nhất với 8 đặc trưng, R² cao nhất)
 - **RandomForest Classification** - Phân loại 4 phân khúc giá (91.6% accuracy) 
 - **Flask Web App** - Giao diện người dùng với Bootstrap + Chart.js
 - **Feature Engineering** - 8 đặc trưng được tối ưu hóa
@@ -203,7 +208,7 @@ python application.py
 
 | Model | Algorithm | Performance | Mục đích |
 |-------|-----------|-------------|----------|
-| **Regression** | RandomForest | High R² Score | Dự đoán giá chính xác |
+| **Regression** | KNN | High R² Score | Dự đoán giá chính xác |
 | **Classification** | RandomForest | 91.6% accuracy | Phân loại Economy/Mid/Premium/Luxury |
 
 ### 8 đặc trưng cuối cùng
@@ -217,10 +222,11 @@ python application.py
 8. **transmission** - Hộp số (Số tự động/Số sàn)
 
 ### Phân tích độ nhạy đặc trưng
-- **Origin**: +294 triệu VND (Nhập khẩu vs Trong nước)
-- **Transmission**: +16.7 triệu VND (Tự động vs Sàn)
-- **Mileage**: Tương quan thực tế với thị trường
-- **Brand & Body Type**: Tác động đáng kể đến giá
+Cả 8 đặc trưng đều tác động đến giá xe, nhưng mức độ ảnh hưởng **không cố định** mà phụ thuộc vào từng hãng xe, dòng xe, năm sản xuất và các yếu tố thị trường. Các con số như Origin (+294 triệu VND) hay Transmission (+16.7 triệu VND) chỉ là ước lượng trung bình trên toàn bộ dữ liệu, mang tính tham khảo tổng thể. Thực tế, chênh lệch giá này sẽ khác nhau giữa các hãng, dòng xe và từng trường hợp cụ thể.
+Ví dụ:
+- Xe nhập khẩu của Toyota có thể chênh lệch giá khác so với BMW.
+- Hộp số tự động ở xe phổ thông tăng giá ít hơn xe sang.
+Do đó, khi dự đoán giá, mô hình sẽ kết hợp đồng thời cả 8 đặc trưng để đưa ra kết quả phù hợp nhất cho từng xe cụ thể.
 
 ## Hướng dẫn sử dụng wed
 
@@ -234,11 +240,11 @@ python application.py
 
 ### Demo
 **Input mẫu**: Toyota, 2020, 2.0L, Sedan, 50,000km, Trong nước, Tự động, Xăng  
-**Output**: ~750 triệu VND
+**Output**: ~ 600 triệu VND
 
-**Test sensitivity**:
-- Đổi "Trong nước" → "Nhập khẩu": +294 triệu VND
-- Đổi "Số sàn" → "Tự động": +16.7 triệu VND
+**Test sensitivity (ví dụ minh họa, giá trị thay đổi là trung bình toàn bộ dữ liệu):**
+- Đổi "Trong nước" → "Nhập khẩu": giá tăng trung bình khoảng +294 triệu VND (tùy từng hãng/dòng xe)
+- Đổi "Số sàn" → "Tự động": giá tăng trung bình khoảng +16.7 triệu VND (tùy từng trường hợp)
 
 ## Training Models (Tùy chọn)
 Models đã được train sẵn. Nếu cần train lại:

@@ -232,57 +232,42 @@ def predict():
         predicted_price = max(50, model.predict(input_data)[0])
         formatted_price = format_price(predicted_price)
         
-        # Tính độ tin cậy động dựa trên hiệu suất mô hình và chất lượng dữ liệu
+        # Tính độ tin cậy cho hồi quy (dựa trên R² và logic chất lượng dữ liệu)
         try:
-            # Độ tin cậy cơ bản từ R² của mô hình
-            base_confidence = 0.93  # R² của RandomForest từ notebook
-            
-            # Điều chỉnh độ tin cậy dựa trên chất lượng dữ liệu đầu vào
+            base_confidence = 0.93  # R² của mô hình hồi quy
             car_age = datetime.now().year - int(request.form.get('year', 2020))
             mileage_km = int(str(mileage_km_raw).replace(',', ''))
-            
-            # Điều chỉnh độ tin cậy nghiêm ngặt hơn
-            age_penalty = max(0, (car_age - 5) * 0.03)  # Phạt từ xe > 5 tuổi
-            mileage_penalty = max(0, (mileage_km - 100000) / 50000 * 0.08)  # Phạt nhiều hơn cho xe chạy nhiều
-            
-            # Hệ số độ tin cậy theo thương hiệu (thực tế hơn)
+            age_penalty = max(0, (car_age - 5) * 0.03)
+            mileage_penalty = max(0, (mileage_km - 100000) / 50000 * 0.08)
             premium_brands = ['Toyota', 'Honda', 'Mazda']
             average_brands = ['Ford', 'Hyundai', 'Kia', 'Chevrolet', 'Nissan']
             luxury_brands = ['BMW', 'Mercedes-Benz', 'Lexus', 'Audi']
-            
             brand_name = request.form.get('brand', 'Toyota')
             if brand_name in premium_brands:
                 brand_factor = 0.02
             elif brand_name in luxury_brands:
-                brand_factor = -0.05  # Luxury cars are harder to predict accurately
+                brand_factor = -0.05
             elif brand_name in average_brands:
                 brand_factor = 0
             else:
-                brand_factor = -0.03  # Unknown brands less reliable
-            
-            # Engine size factor (extreme sizes less predictable)
+                brand_factor = -0.03
             engine_size = float(request.form.get('engine_capacity', 2.0))
             if engine_size < 1.0 or engine_size > 4.0:
                 engine_penalty = 0.05
             else:
                 engine_penalty = 0
-            
             final_confidence = base_confidence - age_penalty - mileage_penalty + brand_factor - engine_penalty
-            final_confidence = max(0.65, min(0.95, final_confidence))  # Wider range: 65% to 95%
-            
+            final_confidence = max(0.65, min(0.95, final_confidence))
             confidence_score = int(final_confidence * 100)
-            
-            # More realistic thresholds
             if confidence_score >= 88:
                 confidence = "Cao"
             elif confidence_score >= 78:
-                confidence = "Trung bình"  
+                confidence = "Trung bình"
             else:
                 confidence = "Thấp"
-            
         except:
             confidence_score = 90
-            confidence = "Cao"  # Fallback
+            confidence = "Cao"
         
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return jsonify({
@@ -365,49 +350,14 @@ def classify():
 
             formatted_price = format_price(predicted_price)
 
-            # Dynamic confidence calculation for classification
+            # Tính độ tin cậy 100% ML từ model.predict_proba()
             try:
-                if model:
-                    probabilities = model.predict_proba(input_data)
-                    ml_confidence = max(probabilities[0])
-                    
-                    # Adjust confidence based on data quality
-                    car_age = datetime.now().year - int(default_form.get('year', 2020))
-                    mileage_km = int(str(default_form.get('mileage_km', '50000')).replace(',', ''))
-                    
-                    # Stricter quality adjustments
-                    age_factor = max(0.7, 1 - (car_age - 3) * 0.04)  # Start penalty from 3+ years
-                    mileage_factor = max(0.6, 1 - max(0, (mileage_km - 80000) / 50000 * 0.15))
-                    
-                    # Brand classification reliability
-                    high_reliability = ['Toyota', 'Honda', 'Mazda'] 
-                    medium_reliability = ['Ford', 'Hyundai', 'Kia', 'Chevrolet']
-                    luxury_brands = ['BMW', 'Mercedes-Benz', 'Lexus', 'Audi']
-                    
-                    brand_name = default_form.get('brand', 'Toyota')
-                    if brand_name in high_reliability:
-                        brand_factor = 1.02
-                    elif brand_name in luxury_brands:
-                        brand_factor = 0.92  # Luxury harder to classify
-                    elif brand_name in medium_reliability:
-                        brand_factor = 0.98
-                    else:
-                        brand_factor = 0.9  # Unknown brands less reliable
-                    
-                    adjusted_confidence = ml_confidence * age_factor * mileage_factor * brand_factor
-                    confidence_score = int(min(94, max(68, adjusted_confidence * 100)))
-                    
-                    # Convert to display format
-                    if confidence_score >= 90:
-                        confidence = confidence_score  # Keep numeric for classify page
-                    elif confidence_score >= 80:
-                        confidence = confidence_score
-                    else:
-                        confidence = confidence_score
-                else:
-                    confidence = 88
+                probabilities = model.predict_proba(input_data)
+                confidence_score = int(max(probabilities[0]) * 100)
+                confidence = confidence_score
             except:
-                confidence = 88
+                confidence_score = 68
+                confidence = confidence_score
             
             similar_models = [
                 {'brand': 'Toyota', 'year': 2020, 'body_type': 'Sedan', 'engine_capacity': '2.0 L', 'price': '600 triệu VND'},
