@@ -98,7 +98,6 @@ pip install -r requirements.txt
 # Chạy script crawl dữ liệu (nếu cần thu thập dữ liệu mới)
 cd data/raw/
 python bot.py
-python bot2.py
 
 # Làm sạch và xử lý dữ liệu
 cd ../processed/
