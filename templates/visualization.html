@@ -1,0 +1,476 @@
+{% extends 'layout.html' %}
+
+{% block title %}Trực Quan Hóa Dữ Liệu Xe{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="visualization-container">
+    <section class="visualization-header">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="page-title">Trực Quan Hóa Dữ Liệu Xe</h1>
+                <p class="lead">Khám phá xu hướng thị trường ô tô cũ tại Hà Nội qua các biểu đồ phân tích</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="filter-controls">
+                    <label for="chart-filter" class="form-label">Lọc theo:</label>
+                    <select id="chart-filter" class="form-select">
+                        <option value="all" selected>Tất cả dữ liệu</option>
+                        <option value="by_brand">Theo thương hiệu</option>
+                        <option value="by_year">Theo năm sản xuất</option>
+                        <option value="by_body">Theo kiểu dáng</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-section">
+        <div class="card chart-card">
+            <div class="card-header">
+                <h2 class="card-title">Phân bố số lượng xe theo thương hiệu</h2> 
+                <p class="card-subtitle">Tất cả số lượng xe cho từng thương hiệu</p>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="brandPriceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="chart-section">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Phân bố thị trường theo kiểu dáng</h2>
+                        <p class="card-subtitle">Tỷ lệ các kiểu dáng xe trên thị trường</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="bodyTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card chart-card">
+                    <div class="card-header">
+                        <h2 class="card-title">Giá trung bình theo kiểu dáng</h2>
+                        <p class="card-subtitle">So sánh giá trung bình giữa các kiểu dáng xe</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="avgPriceByBodyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="chart-section">
+        <div class="card chart-card">
+            <div class="card-header">
+                <h2 class="card-title">Xu hướng giá xe theo thời gian</h2>
+                <p class="card-subtitle">Biến động giá xe ô tô cũ trong các năm</p>
+            </div>
+            <div class="card-body">
+                <div class="chart-container">
+                    <canvas id="priceTrendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="insights-section">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Các thông tin chính</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="insight-card">
+                            <div class="insight-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4>Thống kê thị trường</h4>
+                            <p>Tổng số xe: <strong>{{ stats.total_cars }}</strong> xe</p>
+                            <p>Thương hiệu phổ biến nhất: <strong>{{ stats.top_brand }}</strong> ({{ stats.top_brand_count }} xe)</p>
+                            <p>Kiểu dáng phổ biến nhất: <strong>{{ stats.top_body_type }}</strong> ({{ stats.top_body_type_count }} xe)</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="insight-card">
+                            <div class="insight-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <h4>Thông tin giá cả</h4>
+                            <p>Giá trung bình: <strong>{{ stats.avg_price }}</strong></p>
+                            <p>Giá cao nhất: <strong>{{ stats.max_price }}</strong></p>
+                            <p>Giá thấp nhất: <strong>{{ stats.min_price }}</strong></p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="insight-card">
+                            <div class="insight-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <h4>Yếu tố ảnh hưởng giá</h4>
+                            <p>Thương hiệu, năm sản xuất và số km đã đi là ba yếu tố ảnh hưởng nhiều nhất đến giá xe cũ.</p>
+                            <p>Biểu đồ bên trên sẽ cho bạn thấy rõ hơn mối tương quan giữa các yếu tố.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chartContainers = document.querySelectorAll('.chart-container');
+        chartContainers.forEach(container => {
+            const canvas = container.querySelector('canvas');
+            if (canvas) canvas.style.display = 'none';
+            let spinner = container.querySelector('.spinner-border');
+            if (!spinner) {
+                const spinnerDiv = document.createElement('div');
+                spinnerDiv.className = 'text-center py-5 spinner-wrapper';
+                spinnerDiv.innerHTML = `
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                    <p class="mt-3">Đang tải dữ liệu...</p>
+                `;
+                container.appendChild(spinnerDiv);
+            }
+        });
+        
+        let brandPriceChart, ageVsPriceChart, bodyTypeChart, avgPriceByBodyChart, priceTrendsChart;
+        
+        const chartColors = {
+            backgrounds: [
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(153, 102, 255, 0.7)',
+                'rgba(255, 159, 64, 0.7)',
+                'rgba(201, 203, 207, 0.7)',
+                'rgba(255, 145, 0, 0.7)',
+                'rgba(0, 200, 132, 0.7)',
+                'rgba(175, 122, 197, 0.7)'
+            ],
+            borders: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(201, 203, 207, 1)',
+                'rgba(255, 145, 0, 1)',
+                'rgba(0, 200, 132, 1)',
+                'rgba(175, 122, 197, 1)'
+            ]
+        };
+        
+        function handleFetchError(chartElement, error) {
+            if (!chartElement) {
+                alert('Không tìm thấy phần tử biểu đồ để hiển thị lỗi!');
+                return;
+            }
+            chartElement.style.display = '';
+            const spinner = chartElement.parentElement.querySelector('.spinner-wrapper');
+            if (spinner) spinner.remove();
+            let errorDiv = chartElement.parentElement.querySelector('.alert');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.className = 'alert alert-danger mt-2';
+                errorDiv.innerHTML = `
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Lỗi tải dữ liệu:</strong> ${error.message || 'Không thể tải dữ liệu từ máy chủ'}
+                    <button class="btn btn-outline-primary btn-sm ms-2" onclick="location.reload()">
+                        <i class="fas fa-refresh me-2"></i>Thử lại
+                    </button>
+                `;
+                chartElement.parentElement.appendChild(errorDiv);
+            }
+        }
+        
+        fetch('/api/data/brand_distribution')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Không thể tải dữ liệu phân bố thương hiệu');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                const chartEl = document.getElementById('brandPriceChart');
+                const brandPriceCtx = chartEl.getContext('2d');
+                brandPriceChart = new Chart(brandPriceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Số lượng xe',
+                            data: data.data,
+                            backgroundColor: chartColors.backgrounds,
+                            borderColor: chartColors.borders,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Số lượng xe'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Thương hiệu'
+                                }
+                            }
+                        }
+                    }
+                });
+                chartEl.style.display = '';
+                const spinner = chartEl.parentElement.querySelector('.spinner-wrapper');
+                if (spinner) spinner.remove();
+            })
+            .catch(error => {
+                handleFetchError(document.getElementById('brandPriceChart'), error);
+            });
+        
+        
+        fetch('/api/data/body_type_distribution')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Không thể tải dữ liệu phân bố kiểu dáng xe');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                const chartEl = document.getElementById('bodyTypeChart');
+                const bodyTypeCtx = chartEl.getContext('2d');
+                bodyTypeChart = new Chart(bodyTypeCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            data: data.data,
+                            backgroundColor: chartColors.backgrounds.slice(0, data.labels.length),
+                            borderColor: chartColors.borders.slice(0, data.labels.length),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const percentage = ((context.raw / data.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+                                        return context.label + ': ' + context.raw + ' xe (' + percentage + '%)';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                chartEl.style.display = '';
+                const spinner = chartEl.parentElement.querySelector('.spinner-wrapper');
+                if (spinner) spinner.remove();
+            })
+            .catch(error => {
+                handleFetchError(document.getElementById('bodyTypeChart'), error);
+            });
+        
+        fetch('/api/data/avg_price_by_body_type')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Không thể tải dữ liệu giá trung bình theo kiểu dáng');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                const chartEl = document.getElementById('avgPriceByBodyChart');
+                const avgPriceByBodyCtx = chartEl.getContext('2d');
+                avgPriceByBodyChart = new Chart(avgPriceByBodyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Giá trung bình (triệu VND)',
+                            data: data.data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Giá trung bình theo kiểu dáng'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Giá trung bình: ' + context.raw + ' triệu VND';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Giá trung bình (triệu VND)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Kiểu dáng xe'
+                                }
+                            }
+                        }
+                    }
+                });
+                chartEl.style.display = '';
+                const spinner = chartEl.parentElement.querySelector('.spinner-wrapper');
+                if (spinner) spinner.remove();
+            })
+            .catch(error => {
+                handleFetchError(document.getElementById('avgPriceByBodyChart'), error);
+            });
+        
+        fetch('/api/data/price_trends')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Không thể tải dữ liệu xu hướng giá xe theo thời gian');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                const chartEl = document.getElementById('priceTrendsChart');
+                const priceTrendsCtx = chartEl.getContext('2d');
+                priceTrendsChart = new Chart(priceTrendsCtx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: data.datasets.map((ds, idx) => ({
+                            label: ds.label,
+                            data: ds.data,
+                            backgroundColor: chartColors.backgrounds[idx % chartColors.backgrounds.length],
+                            borderColor: chartColors.borders[idx % chartColors.borders.length],
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: false
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Xu hướng giá xe theo thời gian'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': ' + context.raw + ' triệu VND';
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                title: {
+                                    display: true,
+                                    text: 'Giá trung bình (triệu VND)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Năm sản xuất'
+                                }
+                            }
+                        }
+                    }
+                });
+                chartEl.style.display = '';
+                const spinner = chartEl.parentElement.querySelector('.spinner-wrapper');
+                if (spinner) spinner.remove();
+            })
+            .catch(error => {
+                handleFetchError(document.getElementById('priceTrendsChart'), error);
+            });
+        
+        document.getElementById('chart-filter').addEventListener('change', function(e) {
+            const filterValue = e.target.value;
+            
+            alert(`Tính năng lọc "${filterValue}" đang được phát triển và sẽ sớm được cập nhật trong phiên bản tiếp theo.`);
+            
+        });
+    });
+</script>
+{% endblock %}
