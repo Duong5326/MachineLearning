@@ -31,7 +31,6 @@ pip install -r requirements.txt
 
 cd data/raw/
 python bot.py
-python bot2.py
 
 cd ../processed/
 python clean_raw_to_processed.py
