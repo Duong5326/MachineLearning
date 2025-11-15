@@ -1,6 +1,6 @@
 """
 Ứng dụng Flask ML - Dự đoán giá và phân loại xe ô tô
-Mô hình RandomForest: Hồi quy (R²≈0.93), Phân loại (Độ chính xác≈91.6%)
+Mô hình KNN,RandomForest: Hồi quy (R²≈0.97), Phân loại (Độ chính xác≈91.6%)
 Đặc trưng: dung_tích_dong_co, tuoi_xe, xuat_xu, thuong_hieu, kieu_dang, loai_nhien_lieu, so_km, hop_so
 """
 
@@ -234,7 +234,7 @@ def predict():
         
         # Tính độ tin cậy cho hồi quy (dựa trên R² và logic chất lượng dữ liệu)
         try:
-            base_confidence = 0.93  # R² của mô hình hồi quy
+            base_confidence = 0.97  # R² của mô hình hồi quy
             car_age = datetime.now().year - int(request.form.get('year', 2020))
             mileage_km = int(str(mileage_km_raw).replace(',', ''))
             age_penalty = max(0, (car_age - 5) * 0.03)
